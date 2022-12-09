@@ -2,9 +2,9 @@
 
 #include <vector>
 
-#include <naval/draw_properties.hpp>
 #include <naval/log_level.hpp>
-#include <naval/tag.hpp>
+#include <naval/primitives/draw_properties.hpp>
+#include <naval/primitives/tag.hpp>
 
 namespace naval {
 

@@ -1,4 +1,4 @@
-#include <naval/figure.hpp>
+#include <naval/primitives/figure.hpp>
 
 #include <utility>
 

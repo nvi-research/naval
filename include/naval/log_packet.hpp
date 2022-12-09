@@ -1,15 +1,14 @@
 #pragma once
 
 #include <mutex>
-#include <ostream>
 #include <utility>
 #include <vector>
 
-#include <naval/figure.hpp>
-#include <naval/image.hpp>
 #include <naval/log_level.hpp>
-#include <naval/message_metadata.hpp>
-#include <naval/tag.hpp>
+#include <naval/primitives/figure.hpp>
+#include <naval/primitives/image.hpp>
+#include <naval/primitives/message_metadata.hpp>
+#include <naval/primitives/tag.hpp>
 
 namespace cv {
 class Mat;
@@ -19,11 +18,10 @@ namespace naval {
 
 struct DrawProperties;
 
-class Frame {
+class LogPacket {
  public:
   std::vector<Figure> GetFigures() const;
   std::vector<Image> GetImages() const;
-  void EncodeAllImages(std::ostream& stream) const;
 
   template <typename Value>
   void Info(Value value, std::vector<Tag> tags = {}, const DrawProperties& properties = {}) {

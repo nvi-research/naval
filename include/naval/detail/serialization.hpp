@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <ostream>
 #include <string>
 #include <vector>
 
@@ -9,7 +8,8 @@
 
 namespace naval {
 
-class Frame;
+class ISink;
+class LogPacket;
 struct DrawProperties;
 struct Figure;
 struct Image;
@@ -22,21 +22,21 @@ struct Vertex;
 
 namespace naval::detail {
 
-void SerializeRaw(uint8_t value, std::ostream& stream);
-void SerializeRaw(uint32_t value, std::ostream& stream);
-void SerializeRaw(uint64_t value, std::ostream& stream);
-void SerializeRaw(int32_t value, std::ostream& stream);
-void SerializeRaw(const std::string& value, std::ostream& stream);
+void SerializeRaw(uint8_t value, ISink& sink);
+void SerializeRaw(uint32_t value, ISink& sink);
+void SerializeRaw(uint64_t value, ISink& sink);
+void SerializeRaw(int32_t value, ISink& sink);
+void SerializeRaw(const std::string& value, ISink& sink);
 template <typename ItemType>
-void SerializeRaw(const std::vector<ItemType>& value, std::ostream& stream);
-void SerializeRaw(const TagProperties& value, std::ostream& stream);
-void SerializeRaw(const Tag& value, std::ostream& stream);
-void SerializeRaw(const DrawProperties& value, std::ostream& stream);
-void SerializeRaw(LogLevel value, std::ostream& stream);
-void SerializeRaw(const MessageMetadata& value, std::ostream& stream);
-void SerializeRaw(const Vertex& value, std::ostream& stream);
-void SerializeRaw(const Figure& value, std::ostream& stream);
-void SerializeRaw(const Image& value, std::ostream& stream);
-void SerializeRaw(const Frame& value, std::ostream& stream);
+void SerializeRaw(const std::vector<ItemType>& value, ISink& sink);
+void SerializeRaw(const TagProperties& value, ISink& sink);
+void SerializeRaw(const Tag& value, ISink& sink);
+void SerializeRaw(const DrawProperties& value, ISink& sink);
+void SerializeRaw(LogLevel value, ISink& sink);
+void SerializeRaw(const MessageMetadata& value, ISink& sink);
+void SerializeRaw(const Vertex& value, ISink& sink);
+void SerializeRaw(const Figure& value, ISink& sink);
+void SerializeRaw(const Image& value, ISink& sink);
+void SerializeRaw(const LogPacket& value, ISink& sink);
 
 }  // namespace naval::detail

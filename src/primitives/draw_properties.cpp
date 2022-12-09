@@ -1,4 +1,4 @@
-#include <naval/draw_properties.hpp>
+#include <naval/primitives/draw_properties.hpp>
 
 #include <naval/colors.hpp>
 

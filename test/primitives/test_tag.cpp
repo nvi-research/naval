@@ -4,7 +4,7 @@
 #include <string_view>
 
 #include <naval/colors.hpp>
-#include <naval/tag.hpp>
+#include <naval/primitives/tag.hpp>
 
 namespace naval {
 
