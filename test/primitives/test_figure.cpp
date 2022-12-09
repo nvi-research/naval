@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include <naval/figure.hpp>
+#include <naval/primitives/figure.hpp>
 
 namespace naval {
 

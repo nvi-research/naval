@@ -16,26 +16,25 @@ find_package(OpenCV REQUIRED)
 add_library(
   naval STATIC
   include/naval/colors.hpp
-  include/naval/debug_visualizer.hpp
   include/naval/detail/serialization.hpp
-  include/naval/draw_properties.hpp
-  include/naval/figure.hpp
-  include/naval/frame.hpp
-  include/naval/image.hpp
+  include/naval/detail/sinks_impl.hpp
   include/naval/log_level.hpp
-  include/naval/message_metadata.hpp
-  include/naval/noop_stream.hpp
-  include/naval/sink_stream.hpp
+  include/naval/log_packet.hpp
+  include/naval/primitives/draw_properties.hpp
+  include/naval/primitives/figure.hpp
+  include/naval/primitives/image.hpp
+  include/naval/primitives/message_metadata.hpp
+  include/naval/primitives/tag.hpp
   include/naval/sink.hpp
-  include/naval/stream.hpp
-  include/naval/tag.hpp
+  include/naval/stream_logger.hpp
   src/detail/serialization.cpp
-  src/draw_properties.cpp
-  src/figure.cpp
-  src/frame.cpp
-  src/image.cpp
-  src/sink_stream.cpp
-  src/tag.cpp
+  src/log_packet.cpp
+  src/primitives/draw_properties.cpp
+  src/primitives/figure.cpp
+  src/primitives/image.cpp
+  src/primitives/tag.cpp
+  src/sink.cpp
+  src/stream_logger.cpp
 )
 set_target_properties(naval PROPERTIES CXX_STANDARD 17)
 target_include_directories(naval PUBLIC include)

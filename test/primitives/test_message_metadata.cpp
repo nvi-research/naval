@@ -3,8 +3,8 @@
 #include <vector>
 
 #include <naval/log_level.hpp>
-#include <naval/message_metadata.hpp>
-#include <naval/tag.hpp>
+#include <naval/primitives/message_metadata.hpp>
+#include <naval/primitives/tag.hpp>
 
 namespace naval {
 

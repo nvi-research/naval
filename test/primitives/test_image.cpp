@@ -14,10 +14,11 @@
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include <naval/draw_properties.hpp>
-#include <naval/image.hpp>
+#include <naval/detail/sinks_impl.hpp>
 #include <naval/log_level.hpp>
-#include <naval/tag.hpp>
+#include <naval/primitives/draw_properties.hpp>
+#include <naval/primitives/image.hpp>
+#include <naval/primitives/tag.hpp>
 
 static const std::string kLennaPath =
     (std::filesystem::path{__FILE__}.remove_filename() / "lenna.png").string();
@@ -34,7 +35,8 @@ static void DoTestImageEncoding(int quality, double min_threshold, double max_th
   Image image{{LogLevel::kDebug, {}, DrawProperties().WithImageQuality(quality)}, image_mat};
 
   std::stringstream stream;
-  image.Encode(stream);
+  detail::StdOStreamSink sink{stream};
+  image.Encode(sink);
 
   size_t buffer_size;
   stream.read(reinterpret_cast<char*>(&buffer_size), sizeof(buffer_size));

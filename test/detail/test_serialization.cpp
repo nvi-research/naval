@@ -13,13 +13,14 @@
 #include <opencv2/imgcodecs.hpp>
 
 #include <naval/detail/serialization.hpp>
-#include <naval/draw_properties.hpp>
-#include <naval/figure.hpp>
-#include <naval/frame.hpp>
-#include <naval/image.hpp>
+#include <naval/detail/sinks_impl.hpp>
 #include <naval/log_level.hpp>
-#include <naval/message_metadata.hpp>
-#include <naval/tag.hpp>
+#include <naval/log_packet.hpp>
+#include <naval/primitives/draw_properties.hpp>
+#include <naval/primitives/figure.hpp>
+#include <naval/primitives/image.hpp>
+#include <naval/primitives/message_metadata.hpp>
+#include <naval/primitives/tag.hpp>
 
 namespace naval::detail {
 
@@ -115,11 +116,11 @@ Image DeserializeValue(std::istream& stream) {
 }
 
 template <>
-std::unique_ptr<Frame> DeserializeValue(std::istream& stream) {
+std::unique_ptr<LogPacket> DeserializeValue(std::istream& stream) {
   auto figures = DeserializeVector<Figure>(stream);
   auto images = DeserializeVector<Image>(stream);
 
-  auto frame = std::make_unique<Frame>();
+  auto frame = std::make_unique<LogPacket>();
   for (const auto& figure : figures) {
     frame->AddFigure(figure);
   }
@@ -132,18 +133,22 @@ std::unique_ptr<Frame> DeserializeValue(std::istream& stream) {
 template <typename Value>
 void DoTestSerialization(const Value& value) {
   std::stringstream stream;
-  SerializeRaw(value, stream);
+  StdOStreamSink sink{stream};
+  SerializeRaw(value, sink);
+  stream.seekp(0);
 
   EXPECT_EQ(DeserializeValue<Value>(stream), value);
   EXPECT_EQ(stream.peek(), EOF);
 }
 
 template <>
-void DoTestSerialization(const Frame& value) {
+void DoTestSerialization(const LogPacket& value) {
   std::stringstream stream;
-  SerializeRaw(value, stream);
+  StdOStreamSink sink{stream};
+  SerializeRaw(value, sink);
+  stream.seekp(0);
 
-  auto deserialized = DeserializeValue<std::unique_ptr<Frame>>(stream);
+  auto deserialized = DeserializeValue<std::unique_ptr<LogPacket>>(stream);
   EXPECT_EQ(deserialized->GetFigures(), value.GetFigures());
   EXPECT_EQ(deserialized->GetImages().size(),
             value.GetImages().size());  // TODO: compare images here
@@ -234,15 +239,17 @@ TEST(TestSerialization, Image) {
   const Image image{test_message_metadata, mat};
 
   std::stringstream stream;
-  SerializeRaw(image, stream);
+  StdOStreamSink sink{stream};
+  SerializeRaw(image, sink);
+  stream.seekp(0);
 
   // TODO: actually test serialization of the image
   EXPECT_EQ(DeserializeValue<MessageMetadata>(stream), test_message_metadata);
 }
 
-TEST(TestSerialization, Frame) {
+TEST(TestSerialization, LogPacket) {
   const Figure test_figure{kTestMessageMetadata, {{1.0F, 2.0F}}};
-  Frame test_case;
+  LogPacket test_case;
   test_case.AddFigure(test_figure);
 
   DoTestSerialization(test_case);

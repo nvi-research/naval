@@ -4,7 +4,7 @@
 #include <memory>
 
 #include <naval/colors.hpp>
-#include <naval/draw_properties.hpp>
+#include <naval/primitives/draw_properties.hpp>
 
 namespace naval {
 

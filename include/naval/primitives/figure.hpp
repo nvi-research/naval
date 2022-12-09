@@ -3,7 +3,7 @@
 #include <limits>
 #include <vector>
 
-#include <naval/message_metadata.hpp>
+#include <naval/primitives/message_metadata.hpp>
 
 namespace naval {
 
