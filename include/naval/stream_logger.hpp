@@ -10,7 +10,7 @@ class ISink;
 class StreamLogger {
  public:
   explicit StreamLogger(std::shared_ptr<ISink> sink);
-  void WriteFrame(const LogPacket& frame);
+  void WritePacket(const LogPacket& packet);
 
  private:
   std::shared_ptr<ISink> sink_;

@@ -32,7 +32,7 @@ TEST(TestStreamLogger, StreamLoggerCallsSink) {
 
   StreamLogger stream_logger{sink};
   LogPacket frame;
-  stream_logger.WriteFrame(frame);
+  stream_logger.WritePacket(frame);
 }
 
 }  // namespace naval

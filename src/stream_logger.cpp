@@ -12,8 +12,8 @@ StreamLogger::StreamLogger(std::shared_ptr<ISink> sink) : sink_{std::move(sink)}
   assert(sink_ != nullptr && "Expected non-null sink");
 }
 
-void StreamLogger::WriteFrame(const LogPacket& frame) {
-  detail::SerializeRaw(frame, *sink_);
+void StreamLogger::WritePacket(const LogPacket& packet) {
+  detail::SerializeRaw(packet, *sink_);
   sink_->Flush();
 }
 
