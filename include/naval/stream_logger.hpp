@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <memory>
-#include <string>
 
 namespace naval {
 
@@ -14,7 +13,7 @@ class ISink;
 
 class StreamLogger {
  public:
-  explicit StreamLogger(std::shared_ptr<ISink> sink, const std::string& stream_url);
+  explicit StreamLogger(std::shared_ptr<ISink> sink);
   void WritePacket(const LogPacket& packet);
 
  private:

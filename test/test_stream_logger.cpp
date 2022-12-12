@@ -31,11 +31,10 @@ TEST(TestStreamLogger, StreamLoggerCallsSink) {
     InSequence seq;
     EXPECT_CALL(*sink, WriteBytes(_, _)).Times(AtLeast(1));
     EXPECT_CALL(*sink, WriteBytes(_, _)).Times(AtLeast(1));
-    EXPECT_CALL(*sink, WriteBytes(_, _)).Times(AtLeast(1));
     EXPECT_CALL(*sink, Flush());
   }
 
-  StreamLogger stream_logger{sink, ""};
+  StreamLogger stream_logger{sink};
   LogPacket frame;
   stream_logger.WritePacket(frame);
 }
@@ -43,7 +42,7 @@ TEST(TestStreamLogger, StreamLoggerCallsSink) {
 TEST(TestStreamLogger, StreamLoggerWritesMagicBytesAndProtocolVersion) {
   std::stringstream stream;
   auto sink = std::make_shared<detail::StdOStreamSink>(stream);
-  StreamLogger stream_logger{sink, ""};
+  StreamLogger stream_logger{sink};
 
   EXPECT_EQ(*reinterpret_cast<uint64_t*>(stream.str().data()), kMagicBytes);
   EXPECT_EQ(*reinterpret_cast<uint32_t*>(stream.str().data() + sizeof(uint64_t)), kProtocolVersion);
