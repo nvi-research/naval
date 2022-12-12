@@ -21,7 +21,7 @@
 #include <naval/primitives/tag.hpp>
 
 static const std::string kLennaPath =
-    (std::filesystem::path{__FILE__}.remove_filename() / "lenna.png").string();
+    (std::filesystem::path{__FILE__}.remove_filename() / "../lenna.png").string();
 
 namespace naval {
 
