@@ -1,5 +1,5 @@
 if(USE_SANITIZER)
-  include(sanitizers.cmake)
+  include(cmake/sanitizers.cmake)
 endif()
 
 if(USE_STATIC_ANALYZER)
