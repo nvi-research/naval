@@ -4,7 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [v0.0.1](https://github.com/ZeronSix/naval/releases/tag/v0.0.1) - 2022-12-13
+## [v0.1.0](https://github.com/ZeronSix/naval/releases/tag/v0.1.0) - 2022-12-19
+
+<small>[Compare with v0.0.1](https://github.com/ZeronSix/naval/compare/v0.0.1...v0.1.0)</small>
+
+### Features
+- Add more colors to palette ([887862c](https://github.com/ZeronSix/naval/commit/887862cf2b81ab1ee0109c6fd8702ce56eaf0c2b) by Vyacheslav Zhdanovskiy).
+- Upgrade protocol version ([895602e](https://github.com/ZeronSix/naval/commit/895602e6981bc588fea148db50f39e54a03fbad6) by Vyacheslav Zhdanovskiy).
+- Add line_thickness to drawproperties ([d02c6a0](https://github.com/ZeronSix/naval/commit/d02c6a0ba59f93de658ef53b0b8d2c365350da00) by Vyacheslav Zhdanovskiy).
+- Add font_size to tagproperties ([ac4391b](https://github.com/ZeronSix/naval/commit/ac4391b44ac57958c8ee12b497d67a3537d81b13) by Vyacheslav Zhdanovskiy).
+
+
+## [v0.0.1](https://github.com/ZeronSix/naval/releases/tag/v0.0.1) - 2022-12-15
 
 <small>[Compare with first commit](https://github.com/ZeronSix/naval/compare/476539231851f77c20c63867df92dbfe464c8686...v0.0.1)</small>
 
