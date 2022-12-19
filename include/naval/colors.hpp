@@ -13,6 +13,11 @@ constexpr Color kDefaultBackgroundColor = 0xFF796CB0;
 constexpr Color kDefaultBorderColor = 0xFF796CB0;
 constexpr Color kDefaultFillColor = 0xFFFFFF00;
 
+constexpr Color kRedColor = 0xFF0000FF;
+constexpr Color kGreenColor = 0x00FF00FF;
+constexpr Color kWhiteColor = 0xFFFFFFFF;
+constexpr Color kBlackColor = 0x000000FF;
+
 }  // namespace colors
 
 }  // namespace naval
