@@ -6,7 +6,7 @@
 namespace naval {
 
 constexpr uint64_t kMagicBytes = 0x4A4DECDE;
-constexpr uint32_t kProtocolVersion = 0;
+constexpr uint32_t kProtocolVersion = 1;
 
 class LogPacket;
 class ISink;
