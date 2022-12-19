@@ -197,8 +197,11 @@ TEST(TestSerialization, Tag) {
 }
 
 TEST(TestSerialization, DrawProperties) {
-  const DrawProperties test_case =
-      DrawProperties().WithFillColor(0xDEADF00D).WithBorderColor(0xDEADBEEF).WithImageQuality(50);
+  const DrawProperties test_case = DrawProperties()
+                                       .WithFillColor(0xDEADF00D)
+                                       .WithBorderColor(0xDEADBEEF)
+                                       .WithImageQuality(50)
+                                       .WithLineThickness(1);
   DoTestSerialization(test_case);
 }
 

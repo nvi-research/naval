@@ -29,4 +29,9 @@ TEST(TestDrawProperties, WithImageQuality) {
   EXPECT_EQ(DrawProperties{}.WithImageQuality(kImageQuality).image_quality, kImageQuality);
 }
 
+TEST(TestDrawProperties, WithLineThickness) {
+  constexpr int32_t kLineThickness = 50;
+  EXPECT_EQ(DrawProperties{}.WithLineThickness(kLineThickness).line_thickness, kLineThickness);
+}
+
 }  // namespace naval

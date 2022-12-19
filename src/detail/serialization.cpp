@@ -69,6 +69,7 @@ void SerializeRaw(const DrawProperties& value, ISink& sink) {
   SerializeRaw(value.border_color, sink);
   SerializeRaw(value.fill_color, sink);
   SerializeRaw(value.image_quality, sink);
+  SerializeRaw(value.line_thickness, sink);
 }
 
 void SerializeRaw(LogLevel value, ISink& sink) {

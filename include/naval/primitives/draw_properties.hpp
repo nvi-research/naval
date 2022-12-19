@@ -12,10 +12,12 @@ struct DrawProperties {
   DrawProperties WithBorderColor(Color text_color) const;
   DrawProperties WithFillColor(Color fill_color) const;
   DrawProperties WithImageQuality(int32_t image_quality) const;
+  DrawProperties WithLineThickness(int32_t line_thickness) const;
 
   Color border_color;
   Color fill_color;
   int32_t image_quality;
+  int32_t line_thickness;
 };
 
 inline bool operator==(const DrawProperties& lhs, const DrawProperties& rhs) {
