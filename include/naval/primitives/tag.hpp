@@ -12,14 +12,17 @@ struct TagProperties {
   TagProperties();
 
   bool operator==(const TagProperties& other) const {
-    return text_color == other.text_color && background_color == other.background_color;
+    return text_color == other.text_color && background_color == other.background_color &&
+           font_size == other.font_size;
   }
 
   TagProperties WithTextColor(Color text_color) const;
   TagProperties WithBackgroundColor(Color background_color) const;
+  TagProperties WithFontSize(int32_t font_size) const;
 
   uint32_t text_color;
   uint32_t background_color;
+  int32_t font_size;
 };
 
 struct Tag {

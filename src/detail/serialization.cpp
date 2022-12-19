@@ -37,6 +37,7 @@ void SerializeRaw(int32_t value, ISink& sink) {
 void SerializeRaw(const TagProperties& value, ISink& sink) {
   SerializeRaw(value.text_color, sink);
   SerializeRaw(value.background_color, sink);
+  SerializeRaw(value.font_size, sink);
 }
 
 void SerializeRaw(const std::string& value, ISink& sink) {

@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 
+#include <cstdint>
 #include <string>
 #include <string_view>
 
@@ -22,6 +23,11 @@ TEST(TestTagProperties, WithTextColor) {
 TEST(TestTagProperties, WithBackgroundColor) {
   constexpr Color kBgColor = 0xAABBCCFF;
   EXPECT_EQ(TagProperties{}.WithBackgroundColor(kBgColor).background_color, kBgColor);
+}
+
+TEST(TestTagProperties, WithFontSize) {
+  constexpr int32_t kNewFontSize = 4;
+  EXPECT_EQ(TagProperties{}.WithFontSize(kNewFontSize).font_size, kNewFontSize);
 }
 
 TEST(TestTag, Constructor) {

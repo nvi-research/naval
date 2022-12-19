@@ -186,7 +186,7 @@ TEST(TestSerialization, Vectors) {
 
 TEST(TestSerialization, TagProperties) {
   const TagProperties test_case =
-      TagProperties().WithTextColor(0xDEADF00D).WithBackgroundColor(0xDEADBEEF);
+      TagProperties().WithTextColor(0xDEADF00D).WithBackgroundColor(0xDEADBEEF).WithFontSize(4);
   DoTestSerialization(test_case);
 }
 
