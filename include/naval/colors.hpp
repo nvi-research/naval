@@ -17,6 +17,7 @@ constexpr Color kRedColor = 0xFF0000FF;
 constexpr Color kGreenColor = 0x00FF00FF;
 constexpr Color kWhiteColor = 0xFFFFFFFF;
 constexpr Color kBlackColor = 0x000000FF;
+constexpr Color kTransparentBlackColor = 0x00000080;
 
 }  // namespace colors
 
