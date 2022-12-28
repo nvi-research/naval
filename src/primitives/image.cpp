@@ -26,7 +26,7 @@ void Image::Encode(ISink& sink) const {
   cv::imencode(".jpg", inner_image, memory_buffer,
                {cv::IMWRITE_JPEG_QUALITY, metadata.draw_properties.image_quality});
 
-  detail::SerializeRaw(memory_buffer, sink);
+  detail::Serialize(sink, memory_buffer);
 }
 
 }  // namespace naval

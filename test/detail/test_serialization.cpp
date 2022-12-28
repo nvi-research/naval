@@ -4,14 +4,15 @@
 #include <cstdio>
 #include <filesystem>
 #include <istream>
-#include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <opencv2/core/mat.hpp>
 #include <opencv2/core/mat.inl.hpp>
 #include <opencv2/imgcodecs.hpp>
 
+#include <naval/colors.hpp>
 #include <naval/detail/serialization.hpp>
 #include <naval/detail/sinks_impl.hpp>
 #include <naval/log_level.hpp>
@@ -24,176 +25,115 @@
 
 namespace naval::detail {
 
-template <typename Value>
-Value DeserializeValue(std::istream& stream) {
-  Value value;
-  stream.read(reinterpret_cast<std::istream::char_type*>(&value), sizeof(value));
+template <typename... Args>
+std::vector<uint8_t> JoinByteVectors(Args... args) {
+  std::vector<uint8_t> result;
 
-  return value;
-}
+  (result.insert(result.end(), args.begin(), args.end()), ...);
 
-template <>
-std::string DeserializeValue(std::istream& stream) {
-  auto length = DeserializeValue<size_t>(stream);
-
-  std::string value(length, '\0');
-  stream.read(value.data(), static_cast<std::streamsize>(length));
-
-  return value;
-}
-
-template <typename ItemType>
-std::vector<ItemType> DeserializeVector(std::istream& stream) {
-  auto length = DeserializeValue<size_t>(stream);
-
-  std::vector<ItemType> vec;
-  vec.reserve(length);
-  for (size_t _ = 0; _ < length; ++_) {
-    vec.push_back(DeserializeValue<ItemType>(stream));
-  }
-
-  return vec;
-}
-
-template <>
-std::vector<uint32_t> DeserializeValue(std::istream& stream) {
-  return DeserializeVector<uint32_t>(stream);
-}
-
-template <>
-std::vector<uint8_t> DeserializeValue(std::istream& stream) {
-  return DeserializeVector<uint8_t>(stream);
-}
-
-template <>
-std::vector<std::string> DeserializeValue(std::istream& stream) {
-  return DeserializeVector<std::string>(stream);
-}
-
-template <>
-std::vector<Tag> DeserializeValue(std::istream& stream) {
-  return DeserializeVector<Tag>(stream);
-}
-
-template <>
-std::vector<Vertex> DeserializeValue(std::istream& stream) {
-  return DeserializeVector<Vertex>(stream);
-}
-
-template <>
-Tag DeserializeValue(std::istream& stream) {
-  auto name = DeserializeValue<std::string>(stream);
-  auto value = DeserializeValue<std::string>(stream);
-  auto properties = DeserializeValue<TagProperties>(stream);
-
-  return {name, value, properties};
-}
-
-template <>
-MessageMetadata DeserializeValue(std::istream& stream) {
-  auto log_level = DeserializeValue<LogLevel>(stream);
-  auto tags = DeserializeValue<std::vector<Tag>>(stream);
-  auto properties = DeserializeValue<DrawProperties>(stream);
-
-  return {log_level, tags, properties};
-}
-
-template <>
-Figure DeserializeValue(std::istream& stream) {
-  auto metadata = DeserializeValue<MessageMetadata>(stream);
-  auto vertices = DeserializeValue<std::vector<Vertex>>(stream);
-
-  return {metadata, vertices};
-}
-
-template <>
-Image DeserializeValue(std::istream& stream) {
-  auto metadata = DeserializeValue<MessageMetadata>(stream);
-  std::vector<uint8_t> mat_buffer;
-  cv::Mat mat = cv::imdecode(mat_buffer, cv::IMREAD_COLOR);
-
-  return {metadata, mat};
-}
-
-template <>
-std::unique_ptr<LogPacket> DeserializeValue(std::istream& stream) {
-  auto figures = DeserializeVector<Figure>(stream);
-  auto images = DeserializeVector<Image>(stream);
-
-  auto frame = std::make_unique<LogPacket>();
-  for (const auto& figure : figures) {
-    frame->AddFigure(figure);
-  }
-  for (const auto& image : images) {
-    frame->AddImage(image);
-  }
-  return frame;
+  return result;
 }
 
 template <typename Value>
-void DoTestSerialization(const Value& value) {
+std::vector<uint8_t> SerializeToBytes(const Value& value) {
   std::stringstream stream;
   StdOStreamSink sink{stream};
-  SerializeRaw(value, sink);
-  stream.seekp(0);
+  Serialize(sink, value);
+  auto size = static_cast<size_t>(stream.tellp());
+  stream.seekg(std::ios::beg);
 
-  EXPECT_EQ(DeserializeValue<Value>(stream), value);
-  EXPECT_EQ(stream.peek(), EOF);
+  std::vector<uint8_t> buffer(size);
+  stream.read(reinterpret_cast<char*>(buffer.data()), size);
+
+  return buffer;
 }
 
-template <>
-void DoTestSerialization(const LogPacket& value) {
-  std::stringstream stream;
-  StdOStreamSink sink{stream};
-  SerializeRaw(value, sink);
-  stream.seekp(0);
+template <typename Value>
+void DoSerializationTest(const Value& value, const std::vector<uint8_t> expected) {
+  std::vector<uint8_t> data = SerializeToBytes(value);
 
-  auto deserialized = DeserializeValue<std::unique_ptr<LogPacket>>(stream);
-  EXPECT_EQ(deserialized->GetFigures(), value.GetFigures());
-  EXPECT_EQ(deserialized->GetImages().size(),
-            value.GetImages().size());  // TODO: compare images here
-  EXPECT_EQ(stream.peek(), EOF);
+  ASSERT_EQ(data.size(), expected.size());
+  for (size_t index = 0; index < data.size(); ++index) {
+    EXPECT_EQ(data[index], expected[index])
+        << "Vectors data and expected differ at index " << index;
+  }
 }
 
 TEST(TestSerialization, ArithmeticTypes) {
   {
+    const uint8_t test_case = 0xEF;
+    DoSerializationTest(test_case, {0xEF});
+  }
+  {
     const uint32_t test_case = 0xDEADBEEF;
-    DoTestSerialization(test_case);
+    DoSerializationTest(test_case, {0xEF, 0xBE, 0xAD, 0xDE, 0x00, 0x00, 0x00, 0x00});
+  }
+  {
+    const uint64_t test_case = 0xDEADBEEFDEADBEEF;
+    DoSerializationTest(test_case, {0xEF, 0xBE, 0xAD, 0xDE, 0xEF, 0xBE, 0xAD, 0xDE});
+  }
+  {
+    const int32_t test_case = 0x0EADBEEF;
+    DoSerializationTest(test_case, {0xEF, 0xBE, 0xAD, 0x0E, 0x00, 0x00, 0x00, 0x00});
+  }
+  {
+    const int64_t test_case = 0x0EADBEEFDEADBEEF;
+    DoSerializationTest(test_case, {0xEF, 0xBE, 0xAD, 0xDE, 0xEF, 0xBE, 0xAD, 0x0E});
+  }
+  {
+    const float test_case = 1e-23F;
+    DoSerializationTest(test_case, {0x9A, 0x6D, 0x41, 0x19});
+  }
+  {
+    const double test_case = 1e-23;
+    DoSerializationTest(test_case, {0x51, 0xB2, 0x12, 0x40, 0xB3, 0x2D, 0x28, 0x3B});
   }
 }
 
+TEST(TestSerialization, LogLevel) {
+  const LogLevel test_case = LogLevel::kWarning;
+  DoSerializationTest(test_case, {0x04, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0});
+}
+
 TEST(TestSerialization, Strings) {
-  const std::vector<std::string> test_cases{"Hello, World!", ""};
-  for (const auto& test_case : test_cases) {
-    DoTestSerialization(test_case);
+  const std::vector<std::pair<std::string, std::vector<uint8_t>>> test_cases{
+      {"Hello, World!", {13,  0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,  //
+                         'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!'}},
+      {"", {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}}};
+  for (const auto& [value, expected] : test_cases) {
+    DoSerializationTest(value, expected);
   }
 }
 
 TEST(TestSerialization, Vectors) {
   {
-    const std::vector<uint32_t> test_case{0, 1};
-    DoTestSerialization(test_case);
+    const std::vector<uint8_t> test_case{0x0E, 0xDA};
+    const std::vector<uint8_t> expected{2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0E, 0xDA};
+    DoSerializationTest(test_case, expected);
   }
   {
-    const std::vector<uint32_t> test_case{};
-    DoTestSerialization(test_case);
-  }
-  {
-    const std::vector<std::string> test_case{"Hello, World!", "I hate C++"};
-    DoTestSerialization(test_case);
+    const std::vector<uint8_t> test_case{};
+    const std::vector<uint8_t> expected{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x00};
+    DoSerializationTest(test_case, expected);
   }
 }
 
 TEST(TestSerialization, TagProperties) {
   const TagProperties test_case =
       TagProperties().WithTextColor(0xDEADF00D).WithBackgroundColor(0xDEADBEEF).WithFontSize(4);
-  DoTestSerialization(test_case);
+  const std::vector<uint8_t> expected =
+      JoinByteVectors(SerializeToBytes<Color>(0xDEADF00D), SerializeToBytes<Color>(0xDEADBEEF),
+                      SerializeToBytes<int>(4));
+  DoSerializationTest(test_case, expected);
 }
 
 TEST(TestSerialization, Tag) {
   const Tag test_case{"object", "human",
                       TagProperties().WithTextColor(0xDEADF00D).WithBackgroundColor(0xDEADBEEF)};
-  DoTestSerialization(test_case);
+  const std::vector<uint8_t> expected =
+      JoinByteVectors(SerializeToBytes(test_case.name), SerializeToBytes(test_case.value),
+                      SerializeToBytes(test_case.properties));
+  DoSerializationTest(test_case, expected);
 }
 
 TEST(TestSerialization, DrawProperties) {
@@ -202,15 +142,11 @@ TEST(TestSerialization, DrawProperties) {
                                        .WithBorderColor(0xDEADBEEF)
                                        .WithImageQuality(50)
                                        .WithLineThickness(1);
-  DoTestSerialization(test_case);
-}
+  const std::vector<uint8_t> expected = JoinByteVectors(
+      SerializeToBytes(test_case.border_color), SerializeToBytes(test_case.fill_color),
+      SerializeToBytes(test_case.image_quality), SerializeToBytes(test_case.line_thickness));
 
-TEST(TestSerialization, LogLevel) {
-  const std::vector<LogLevel> test_cases{LogLevel::kDebug, LogLevel::kTrace, LogLevel::kInfo};
-
-  for (const auto& test_case : test_cases) {
-    DoTestSerialization(test_case);
-  }
+  DoSerializationTest(test_case, expected);
 }
 
 static const MessageMetadata kTestMessageMetadata{
@@ -219,35 +155,45 @@ static const MessageMetadata kTestMessageMetadata{
     DrawProperties().WithFillColor(0xDEADF00D).WithBorderColor(0xDEADBEEF)};
 
 TEST(TestSerialization, MessageMetadata) {
-  DoTestSerialization(kTestMessageMetadata);
+  const MessageMetadata test_case = kTestMessageMetadata;
+  const std::vector<uint8_t> expected =
+      JoinByteVectors(SerializeToBytes(test_case.level), SerializeToBytes(test_case.tags),
+                      SerializeToBytes(test_case.draw_properties));
+
+  DoSerializationTest(kTestMessageMetadata, expected);
 }
 
 TEST(TestSerialization, Vertex) {
   const Vertex test_case{1.0F, 2.0F};
-  DoTestSerialization(test_case);
+  const std::vector<uint8_t> expected =
+      JoinByteVectors(SerializeToBytes(test_case.x), SerializeToBytes(test_case.y));
+  DoSerializationTest(test_case, expected);
 }
 
 TEST(TestSerialization, Figure) {
   const Figure test_case{kTestMessageMetadata, {{1.0F, 2.0F}}};
-  DoTestSerialization(test_case);
+  const std::vector<uint8_t> expected =
+      JoinByteVectors(SerializeToBytes(test_case.metadata), SerializeToBytes(test_case.vertices));
+  DoSerializationTest(test_case, expected);
 }
 
 static const std::string kLennaPath =
     (std::filesystem::path{__FILE__}.remove_filename() / "../lenna.png").string();
 
 TEST(TestSerialization, Image) {
-  const MessageMetadata test_message_metadata{LogLevel::kDebug, {}};
   ASSERT_TRUE(std::filesystem::is_regular_file(kLennaPath));
+
   cv::Mat mat = cv::imread(kLennaPath);
-  const Image image{test_message_metadata, mat};
+  const Image test_case{kTestMessageMetadata, mat};
 
-  std::stringstream stream;
-  StdOStreamSink sink{stream};
-  SerializeRaw(image, sink);
-  stream.seekp(0);
+  std::vector<uint8_t> image_bytes;
+  cv::imencode(".jpg", mat, image_bytes,
+               {cv::IMWRITE_JPEG_QUALITY, test_case.metadata.draw_properties.image_quality});
 
-  // TODO: actually test serialization of the image
-  EXPECT_EQ(DeserializeValue<MessageMetadata>(stream), test_message_metadata);
+  const std::vector<uint8_t> expected = JoinByteVectors(
+      SerializeToBytes(test_case.metadata), SerializeToBytes(image_bytes.size()), image_bytes);
+
+  DoSerializationTest(test_case, expected);
 }
 
 TEST(TestSerialization, LogPacket) {
@@ -255,7 +201,10 @@ TEST(TestSerialization, LogPacket) {
   LogPacket test_case;
   test_case.AddFigure(test_figure);
 
-  DoTestSerialization(test_case);
+  const std::vector<uint8_t> expected = JoinByteVectors(SerializeToBytes(test_case.GetFigures()),
+                                                        SerializeToBytes(test_case.GetImages()));
+
+  DoSerializationTest(test_case, expected);
 }
 
 }  // namespace naval::detail

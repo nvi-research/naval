@@ -10,12 +10,12 @@ namespace naval {
 
 StreamLogger::StreamLogger(std::shared_ptr<ISink> sink) : sink_{std::move(sink)} {
   assert(sink_ != nullptr && "Expected non-null sink");
-  detail::SerializeRaw(kMagicBytes, *sink_);
-  detail::SerializeRaw(kProtocolVersion, *sink_);
+  detail::Serialize(*sink_, kMagicBytes);
+  detail::Serialize(*sink_, kProtocolVersion);
 }
 
 void StreamLogger::WritePacket(const LogPacket& packet) {
-  detail::SerializeRaw(packet, *sink_);
+  detail::Serialize(*sink_, packet);
   sink_->Flush();
 }
 

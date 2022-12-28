@@ -16,6 +16,7 @@ find_package(OpenCV REQUIRED)
 add_library(
   naval STATIC
   include/naval/colors.hpp
+  include/naval/detail/macros.hpp
   include/naval/detail/serialization.hpp
   include/naval/detail/sinks_impl.hpp
   include/naval/log_level.hpp
