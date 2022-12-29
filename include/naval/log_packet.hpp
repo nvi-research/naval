@@ -48,14 +48,14 @@ class LogPacket {
   std::vector<Image> images_;
 };
 
-#define NAVAL_DEBUG(log_packet, value, tags, draw_properties)                             \
-  do {                                                                                    \
-    (log_packet).Log(__FILE__, __LINE__, LogLevel::kDebug, value, tags, draw_properties); \
+#define NAVAL_DEBUG(log_packet, value, tags, draw_properties)                                    \
+  do {                                                                                           \
+    (log_packet).Log(__FILE__, __LINE__, naval::LogLevel::kDebug, value, tags, draw_properties); \
   } while (false)
 
-#define NAVAL_INFO(log_packet, value, tags, draw_properties)                             \
-  do {                                                                                   \
-    (log_packet).Log(__FILE__, __LINE__, LogLevel::kInfo, value, tags, draw_properties); \
+#define NAVAL_INFO(log_packet, value, tags, draw_properties)                                    \
+  do {                                                                                          \
+    (log_packet).Log(__FILE__, __LINE__, naval::LogLevel::kInfo, value, tags, draw_properties); \
   } while (false)
 
 }  // namespace naval
