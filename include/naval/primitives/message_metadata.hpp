@@ -9,13 +9,20 @@
 namespace naval {
 
 struct MessageMetadata {
-  MessageMetadata(LogLevel level, std::vector<Tag> tags, const DrawProperties& draw_properties = {})
-      : level{level}, tags{std::move(tags)}, draw_properties{draw_properties} {
+  MessageMetadata(LogLevel level, std::vector<Tag> tags, const DrawProperties& draw_properties,
+                  std::string file, int line)
+      : level{level},
+        tags{std::move(tags)},
+        draw_properties{draw_properties},
+        file{std::move(file)},
+        line{line} {
   }
 
   LogLevel level;
   std::vector<Tag> tags;
   DrawProperties draw_properties;
+  std::string file;
+  int line;
 };
 
 inline bool operator==(const MessageMetadata& lhs, const MessageMetadata& rhs) {

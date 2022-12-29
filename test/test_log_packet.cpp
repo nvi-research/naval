@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include <opencv2/core/mat.hpp>
@@ -54,7 +55,7 @@ TEST(TestPacket, ConvertToVerticesMyRect) {
 
 TEST(TestPacket, MyRectHasCorrectVertices) {
   LogPacket packet;
-  packet.Debug(kRect, {}, {});
+  NAVAL_DEBUG(packet, kRect, {}, {});
 
   const std::vector<Vertex> expected{
       {0.0F, 0.0F}, {100.0F, 0.0F}, {100.0F, 200.0F}, {0.0F, 200.0F}};
@@ -70,8 +71,8 @@ TEST(TestPacket, MyRectHasCorrectVertices) {
 
 TEST(TestPacket, LogLevels) {
   LogPacket packet;
-  packet.Debug(kRect, {}, {});
-  packet.Info(kRect, {}, {});
+  NAVAL_DEBUG(packet, kRect, {}, {});
+  NAVAL_INFO(packet, kRect, {}, {});
 
   std::vector<Figure> figures = packet.GetFigures();
   ASSERT_EQ(figures.size(), 2U);
@@ -80,7 +81,7 @@ TEST(TestPacket, LogLevels) {
 }
 
 TEST(TestPacket, AddFigure) {
-  Figure test_case{{LogLevel::kDebug, {}}, {}};
+  Figure test_case{{LogLevel::kDebug, {}, {}, __FILE__, __LINE__}, {}};
 
   LogPacket packet;
   packet.AddFigure(test_case);
@@ -91,7 +92,7 @@ TEST(TestPacket, AddFigure) {
 
 TEST(TestPacket, LogImage) {
   LogPacket packet;
-  packet.Debug(cv::Mat(), {}, {});
+  NAVAL_DEBUG(packet, cv::Mat(), {}, {});
 
   ASSERT_EQ(packet.GetImages().size(), 1U);
 }
