@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 
+#include <string>
 #include <vector>
 
 #include <naval/log_level.hpp>
@@ -12,14 +13,7 @@ TEST(TestMessageMetadata, Constructor) {
   // TODO: better tests here
   {
     const LogLevel level = LogLevel::kTrace;
-    MessageMetadata metadata{level, {}};
-
-    EXPECT_EQ(metadata.level, level);
-    EXPECT_EQ(metadata.tags.size(), 0);
-  }
-  {
-    const LogLevel level = LogLevel::kDebug;
-    MessageMetadata metadata{level, {}, {}};
+    MessageMetadata metadata{level, {}, {}, "", 0};
 
     EXPECT_EQ(metadata.level, level);
     EXPECT_EQ(metadata.tags.size(), 0);
