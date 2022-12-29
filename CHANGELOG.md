@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v0.2.0](https://github.com/ZeronSix/naval/releases/tag/v0.2.0) - 2022-12-29
+
+<small>[Compare with v0.1.0](https://github.com/ZeronSix/naval/compare/v0.1.0...v0.2.0)</small>
+
+### Bug Fixes
+- Allow to use naval_* macros outside of naval namespace ([d286483](https://github.com/ZeronSix/naval/commit/d286483ad352d674afbcfbeb39acc2a1e683e42f) by Vyacheslav Zhdanovskiy).
+
+### Code Refactoring
+- Refactor serialization code ([66d9a9d](https://github.com/ZeronSix/naval/commit/66d9a9dadeec5556f2d5d8c529ed579af1f84a5b) by Vyacheslav Zhdanovskiy).
+
+### Features
+- Increase protocol version ([3749d90](https://github.com/ZeronSix/naval/commit/3749d90f777c23d2f9ed0ce49f237cfee3af194e) by Vyacheslav Zhdanovskiy).
+- Allow to track context in messagemetadata ([085977a](https://github.com/ZeronSix/naval/commit/085977abca782f8cc178ed4ee1a795571af336d7) by Vyacheslav Zhdanovskiy).
+- New colors in palette ([8a0d8bc](https://github.com/ZeronSix/naval/commit/8a0d8bc14f666f79cba55931dccce5234701a358) by Ilya Chaykin).
+
+
 ## [v0.1.0](https://github.com/ZeronSix/naval/releases/tag/v0.1.0) - 2022-12-19
 
 <small>[Compare with v0.0.1](https://github.com/ZeronSix/naval/compare/v0.0.1...v0.1.0)</small>
