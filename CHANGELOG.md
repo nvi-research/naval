@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v0.3.0](https://github.com/ZeronSix/naval/releases/tag/v0.3.0) - 2022-12-30
+
+<small>[Compare with v0.2.0](https://github.com/ZeronSix/naval/compare/v0.2.0...v0.3.0)</small>
+
+### Features
+- Increase protocol version ([d8bba19](https://github.com/ZeronSix/naval/commit/d8bba19276652fb3e7abe74d59102c4d43efe58b) by Vyacheslav Zhdanovskiy).
+- Store timestamp in logpacket ([0f490ba](https://github.com/ZeronSix/naval/commit/0f490bac6a16556beee8e822f359e56894fbdf6b) by Vyacheslav Zhdanovskiy).
+- Add log_level to tag ([16bda62](https://github.com/ZeronSix/naval/commit/16bda621b41d26dec10fd418eb632e701798e2de) by Vyacheslav Zhdanovskiy).
+- Remove naval_debug and naval_info macros, restore debug and info methods ([52be9c4](https://github.com/ZeronSix/naval/commit/52be9c4cd6d247224af3ff0731faa294aa5291a0) by Vyacheslav Zhdanovskiy).
+
+
 ## [v0.2.0](https://github.com/ZeronSix/naval/releases/tag/v0.2.0) - 2022-12-29
 
 <small>[Compare with v0.1.0](https://github.com/ZeronSix/naval/compare/v0.1.0...v0.2.0)</small>
