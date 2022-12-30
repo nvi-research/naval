@@ -152,16 +152,13 @@ TEST(TestSerialization, DrawProperties) {
 static const MessageMetadata kTestMessageMetadata{
     LogLevel::kDebug,
     {{"id", "0", TagProperties().WithTextColor(0xDEADF00D).WithBackgroundColor(0xDEADBEEF)}},
-    DrawProperties().WithFillColor(0xDEADF00D).WithBorderColor(0xDEADBEEF),
-    __FILE__,
-    __LINE__};
+    DrawProperties().WithFillColor(0xDEADF00D).WithBorderColor(0xDEADBEEF)};
 
 TEST(TestSerialization, MessageMetadata) {
   const MessageMetadata test_case = kTestMessageMetadata;
   const std::vector<uint8_t> expected =
       JoinByteVectors(SerializeToBytes(test_case.level), SerializeToBytes(test_case.tags),
-                      SerializeToBytes(test_case.draw_properties), SerializeToBytes(test_case.file),
-                      SerializeToBytes(test_case.line));
+                      SerializeToBytes(test_case.draw_properties));
 
   DoSerializationTest(kTestMessageMetadata, expected);
 }

@@ -32,9 +32,7 @@ TEST(TestImage, LennaDoesExist) {
 
 static void DoTestImageEncoding(int quality, double min_threshold, double max_threshold) {
   cv::Mat image_mat = cv::imread(kLennaPath);
-  Image image{
-      {LogLevel::kDebug, {}, DrawProperties().WithImageQuality(quality), __FILE__, __LINE__},
-      image_mat};
+  Image image{{LogLevel::kDebug, {}, DrawProperties().WithImageQuality(quality)}, image_mat};
 
   std::stringstream stream;
   detail::StdOStreamSink sink{stream};

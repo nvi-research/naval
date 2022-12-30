@@ -90,7 +90,7 @@ NAVAL_SERIALIZE(Tag, name, value, properties);
 NAVAL_SERIALIZE(DrawProperties, border_color, fill_color, image_quality, line_thickness);
 
 // message_metadata.hpp
-NAVAL_SERIALIZE(MessageMetadata, level, tags, draw_properties, file, line);
+NAVAL_SERIALIZE(MessageMetadata, level, tags, draw_properties);
 
 // figure.hpp
 NAVAL_SERIALIZE(Vertex, x, y);
