@@ -15,8 +15,8 @@
 
 namespace naval {
 
-TEST(TestLogPacket, EmptypacketNoFigures) {
-  LogPacket packet;
+TEST(TestLogPacket, EmptyPacketNoFigures) {
+  LogPacket packet{0.0};
   EXPECT_EQ(packet.GetFigures().size(), 0);
 }
 
@@ -53,7 +53,7 @@ TEST(TestPacket, ConvertToVerticesMyRect) {
 }
 
 TEST(TestPacket, MyRectHasCorrectVertices) {
-  LogPacket packet;
+  LogPacket packet{0.0};
   packet.Debug(kRect);
 
   const std::vector<Vertex> expected{
@@ -69,7 +69,7 @@ TEST(TestPacket, MyRectHasCorrectVertices) {
 }
 
 TEST(TestPacket, LogLevels) {
-  LogPacket packet;
+  LogPacket packet{0.0};
   packet.Debug(kRect);
   packet.Info(kRect);
 
@@ -82,7 +82,7 @@ TEST(TestPacket, LogLevels) {
 TEST(TestPacket, AddFigure) {
   Figure test_case{{LogLevel::kDebug, {}, {}}, {}};
 
-  LogPacket packet;
+  LogPacket packet{0.0};
   packet.AddFigure(test_case);
   auto figures = packet.GetFigures();
   ASSERT_EQ(figures.size(), 1U);
@@ -90,7 +90,7 @@ TEST(TestPacket, AddFigure) {
 }
 
 TEST(TestPacket, LogImage) {
-  LogPacket packet;
+  LogPacket packet{0.0};
   packet.Debug(cv::Mat());
 
   ASSERT_EQ(packet.GetImages().size(), 1U);

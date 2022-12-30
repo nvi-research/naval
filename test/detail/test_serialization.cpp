@@ -199,10 +199,11 @@ TEST(TestSerialization, Image) {
 
 TEST(TestSerialization, LogPacket) {
   const Figure test_figure{kTestMessageMetadata, {{1.0F, 2.0F}}};
-  LogPacket test_case;
+  LogPacket test_case{1.0};
   test_case.AddFigure(test_figure);
 
-  const std::vector<uint8_t> expected = JoinByteVectors(SerializeToBytes(test_case.GetFigures()),
+  const std::vector<uint8_t> expected = JoinByteVectors(SerializeToBytes(test_case.GetTimestamp()),
+                                                        SerializeToBytes(test_case.GetFigures()),
                                                         SerializeToBytes(test_case.GetImages()));
 
   DoSerializationTest(test_case, expected);

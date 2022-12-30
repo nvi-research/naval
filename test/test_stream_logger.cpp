@@ -35,7 +35,7 @@ TEST(TestStreamLogger, StreamLoggerCallsSink) {
   }
 
   StreamLogger stream_logger{sink};
-  LogPacket frame;
+  LogPacket frame{0.0};
   stream_logger.WritePacket(frame);
 }
 

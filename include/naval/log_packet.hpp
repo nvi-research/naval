@@ -20,6 +20,12 @@ struct DrawProperties;
 
 class LogPacket {
  public:
+  using Timestamp = double;
+
+ public:
+  explicit LogPacket(Timestamp timestamp_sec) : timestamp_sec_{timestamp_sec} {
+  }
+
   std::vector<Figure> GetFigures() const;
   std::vector<Image> GetImages() const;
 
@@ -51,8 +57,13 @@ class LogPacket {
   void AddFigure(Figure figure);
   void AddImage(Image image);
 
+  Timestamp GetTimestamp() const {
+    return timestamp_sec_;
+  }
+
  private:
   mutable std::mutex mutex_;
+  Timestamp timestamp_sec_;
   std::vector<Figure> figures_;
   std::vector<Image> images_;
 };

@@ -18,6 +18,7 @@ void Serialize(ISink& sink, const Image& value) {
 }
 
 void Serialize(ISink& sink, const LogPacket& value) {
+  Serialize(sink, value.GetTimestamp());
   Serialize(sink, value.GetFigures());
   Serialize(sink, value.GetImages());
 }
