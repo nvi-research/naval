@@ -84,7 +84,7 @@ inline void Serialize(ISink& sink, const std::string& value) {
 
 // tag.hpp
 NAVAL_SERIALIZE(TagProperties, text_color, background_color, font_size)
-NAVAL_SERIALIZE(Tag, name, value, properties);
+NAVAL_SERIALIZE(Tag, name, value, properties, log_level);
 
 // draw_properties.hpp
 NAVAL_SERIALIZE(DrawProperties, border_color, fill_color, image_quality, line_thickness);

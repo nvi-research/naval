@@ -129,10 +129,11 @@ TEST(TestSerialization, TagProperties) {
 
 TEST(TestSerialization, Tag) {
   const Tag test_case{"object", "human",
-                      TagProperties().WithTextColor(0xDEADF00D).WithBackgroundColor(0xDEADBEEF)};
-  const std::vector<uint8_t> expected =
-      JoinByteVectors(SerializeToBytes(test_case.name), SerializeToBytes(test_case.value),
-                      SerializeToBytes(test_case.properties));
+                      TagProperties().WithTextColor(0xDEADF00D).WithBackgroundColor(0xDEADBEEF),
+                      LogLevel::kInfo};
+  const std::vector<uint8_t> expected = JoinByteVectors(
+      SerializeToBytes(test_case.name), SerializeToBytes(test_case.value),
+      SerializeToBytes(test_case.properties), SerializeToBytes(test_case.log_level));
   DoSerializationTest(test_case, expected);
 }
 

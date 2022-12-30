@@ -5,6 +5,7 @@
 #include <string_view>
 
 #include <naval/colors.hpp>
+#include <naval/log_level.hpp>
 
 namespace naval {
 
@@ -36,18 +37,22 @@ struct Tag {
   Tag(std::string name, double value);
 
   template <typename ValueType>
-  Tag(std::string name, ValueType value, const TagProperties& properties)
+  Tag(std::string name, ValueType value, const TagProperties& properties,
+      LogLevel level = LogLevel::kInfo)
       : Tag{name, std::move(value)} {
     this->properties = properties;
+    this->log_level = level;
   }
 
   bool operator==(const Tag& other) const {
-    return name == other.name && value == other.value && properties == other.properties;
+    return name == other.name && value == other.value && properties == other.properties &&
+           log_level == other.log_level;
   }
 
   std::string name;
   std::string value;
   TagProperties properties;
+  LogLevel log_level = LogLevel::kInfo;
 };
 
 }  // namespace naval
