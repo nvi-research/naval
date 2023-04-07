@@ -49,3 +49,8 @@ option(NAVAL_BUILD_TESTS "Build test programs" OFF)
 if(NAVAL_BUILD_TESTS)
   add_subdirectory(test)
 endif()
+
+option(NAVAL_BUILD_EXAMPLES "Build examples" OFF)
+if(NAVAL_BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif()

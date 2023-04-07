@@ -29,54 +29,66 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
+#include <filesystem>
+#include <iostream>
+#include <vector>
 
-#include <cstddef>
-#include <cstdint>
-#include <memory>
-#include <sstream>
-#include <string>
-
-#include <naval/detail/sinks_impl.hpp>
 #include <naval/log_packet.hpp>
 #include <naval/sink.hpp>
 #include <naval/stream_logger.hpp>
+#include <opencv2/videoio.hpp>
+
+namespace fs = std::filesystem;
+
+namespace my_namespace {
+
+// This is user-defined rect that that we want to log
+struct MyRect {
+  MyRect(float x, float y, float width, float height) : x{x}, y{y}, width{width}, height{height} {
+  }
+
+  float x;
+  float y;
+  float width;
+  float height;
+};
+
+}  // namespace my_namespace
 
 namespace naval {
 
-class MockSink : public ISink {
- public:
-  MOCK_METHOD(void, WriteBytes, (const uint8_t* data, size_t count), (override));
-  MOCK_METHOD(void, Flush, (), (override));
-};
-
-TEST(TestStreamLogger, StreamLoggerCallsSink) {
-  auto sink = std::make_shared<MockSink>();
-
-  {
-    using ::testing::_;
-    using ::testing::AtLeast;
-    using ::testing::InSequence;
-
-    InSequence seq;
-    EXPECT_CALL(*sink, WriteBytes(_, _)).Times(AtLeast(1));
-    EXPECT_CALL(*sink, WriteBytes(_, _)).Times(AtLeast(1));
-    EXPECT_CALL(*sink, Flush());
-  }
-
-  StreamLogger stream_logger{sink};
-  LogPacket frame{0.0};
-  stream_logger.WritePacket(frame);
-}
-
-TEST(TestStreamLogger, StreamLoggerWritesMagicBytesAndProtocolVersion) {
-  std::stringstream stream;
-  auto sink = std::make_shared<detail::StdOStreamSink>(stream);
-  StreamLogger stream_logger{sink};
-
-  EXPECT_EQ(*reinterpret_cast<uint64_t*>(stream.str().data()), kMagicBytes);
-  EXPECT_EQ(*reinterpret_cast<uint32_t*>(stream.str().data() + sizeof(uint64_t)), kProtocolVersion);
+// User has to provide this function to convert from his types into naval primitives
+template <>
+inline std::vector<Vertex> ConvertToVertices(const my_namespace::MyRect& geometry) {
+  const auto [x, y, width, height] = geometry;
+  return {{x + width, y}, {x + width, y + height}, {x, y + height}, {x, y}};
 }
 
 }  // namespace naval
+
+int main() {
+  // Video is located alongside the source .cpp
+  const fs::path video_path = fs::path{__FILE__}.remove_filename() / "bunny.mp4";
+  // Log file location is small_bunny_1080p_60fps.mp4.navalil
+  const fs::path log_path = fs::path{video_path}.replace_extension(".mp4.navalil");
+  cv::VideoCapture video_capture{video_path.string()};
+
+  naval::StreamLogger stream_logger{naval::CreateFileSink(log_path)};
+
+  while (true) {
+    cv::Mat frame;
+    const double timestamp_sec = video_capture.get(cv::CAP_PROP_POS_MSEC) / 1000;
+    std::cout << "Processing frame with ts_sec = " << timestamp_sec << "\n";
+    if (!video_capture.read(frame)) {
+      break;
+    }
+
+    my_namespace::MyRect rect{300, 300, 300, 300};
+    naval::LogPacket log_packet{timestamp_sec};
+    log_packet.Info(rect, {{"Object type", "Simple rect"}, {"Metadata", "Lots of information!"}});
+
+    stream_logger.WritePacket(log_packet);
+  }
+
+  return 0;
+}
