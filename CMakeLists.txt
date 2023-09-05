@@ -25,6 +25,7 @@ add_library(
   include/naval/primitives/figure.hpp
   include/naval/primitives/image.hpp
   include/naval/primitives/message_metadata.hpp
+  include/naval/primitives/popup.hpp
   include/naval/primitives/tag.hpp
   include/naval/sink.hpp
   include/naval/stream_logger.hpp
@@ -33,6 +34,7 @@ add_library(
   src/primitives/draw_properties.cpp
   src/primitives/figure.cpp
   src/primitives/image.cpp
+  src/primitives/popup.cpp
   src/primitives/tag.cpp
   src/sink.cpp
   src/stream_logger.cpp

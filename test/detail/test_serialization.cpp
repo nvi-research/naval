@@ -233,9 +233,9 @@ TEST(TestSerialization, LogPacket) {
   LogPacket test_case{1.0};
   test_case.AddFigure(test_figure);
 
-  const std::vector<uint8_t> expected = JoinByteVectors(SerializeToBytes(test_case.GetTimestamp()),
-                                                        SerializeToBytes(test_case.GetFigures()),
-                                                        SerializeToBytes(test_case.GetImages()));
+  const std::vector<uint8_t> expected = JoinByteVectors(
+      SerializeToBytes(test_case.GetTimestamp()), SerializeToBytes(test_case.GetFigures()),
+      SerializeToBytes(test_case.GetImages()), SerializeToBytes(test_case.GetPopups()));
 
   DoSerializationTest(test_case, expected);
 }

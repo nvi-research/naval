@@ -43,9 +43,9 @@
 
 /**
  * @namespace naval
- * 
+ *
  * @brief The naval main namespace.
- * 
+ *
  */
 namespace naval {
 
@@ -59,30 +59,30 @@ constexpr uint64_t kMagicBytes = 0x4A4DECDE;
  *
  * Used by naval-player to check if it supports playing the current file.
  */
-constexpr uint32_t kProtocolVersion = 3;
+constexpr uint32_t kProtocolVersion = 4;
 
 class LogPacket;
 class ISink;
 
 /**
  * @class StreamLogger
- * 
+ *
  * @brief Stream logger that the produces the output .navalil log file from LogPackets.
- * 
+ *
  * \see LogPacket
  */
 class StreamLogger {
  public:
   /**
    * @brief Construct a new StreamLogger object.
-   * 
+   *
    * @param sink The sink that StreamLogger should log to.
    */
   explicit StreamLogger(std::shared_ptr<ISink> sink);
 
   /**
    * @brief Logs the provided LogPacket.
-   * 
+   *
    * @param packet The provided LogPacket.
    */
   void WritePacket(const LogPacket& packet);

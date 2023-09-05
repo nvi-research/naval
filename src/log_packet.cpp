@@ -48,6 +48,11 @@ std::vector<Image> LogPacket::GetImages() const {
   return this->images_;
 }
 
+std::vector<Popup> LogPacket::GetPopups() const {
+  std::lock_guard lock{mutex_};
+  return this->popups_;
+}
+
 void LogPacket::AddFigure(Figure figure) {
   std::lock_guard lock{mutex_};
   this->figures_.push_back(std::move(figure));
