@@ -29,30 +29,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <naval/detail/serialization.hpp>
+/**
+ * @file popup.hpp
+ * @author Vyacheslav Zhdanovskiy (vyacheslav.zhdanovskiy@nvi-research.com)
+ *
+ * @copyright Copyright (c) 2023 NVI Research
+ */
+#pragma once
 
-#include <naval/log_packet.hpp>
-#include <naval/primitives/image.hpp>
+#include <string>
+
+#include <naval/primitives/message_metadata.hpp>
 
 namespace naval {
 
-class ISink;
+struct Popup {
+  Popup(const MessageMetadata& metadata, std::string text);
 
-}
+  MessageMetadata metadata;
+  std::string text;
+};
 
-namespace naval::detail {
-
-template <>
-void Serialize(ISink& sink, const Image& value) {
-  Serialize(sink, value.metadata);
-  value.Encode(sink);
-}
-
-void Serialize(ISink& sink, const LogPacket& value) {
-  Serialize(sink, value.GetTimestamp());
-  Serialize(sink, value.GetFigures());
-  Serialize(sink, value.GetImages());
-  Serialize(sink, value.GetPopups());
-}
-
-}  // namespace naval::detail
+}  // namespace naval

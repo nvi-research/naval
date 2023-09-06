@@ -135,4 +135,11 @@ TEST(TestPacket, EncodeAllImages) {
   // TODO
 }
 
+TEST(TestPacket, LogPopup) {
+  LogPacket packet{0.0};
+  packet.Debug("Popup message");
+
+  ASSERT_EQ(packet.GetPopups().size(), 1U);
+}
+
 }  // namespace naval

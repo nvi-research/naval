@@ -34,7 +34,7 @@
  * @author Vyacheslav Zhdanovskiy (vyacheslav.zhdanovskiy@nvi-research.com)
  *
  * This file contains detail serialization code that should not be used directly by the user.
- * 
+ *
  * @copyright Copyright (c) 2023 NVI Research
  */
 
@@ -49,6 +49,7 @@
 #include <naval/primitives/draw_properties.hpp>
 #include <naval/primitives/figure.hpp>
 #include <naval/primitives/message_metadata.hpp>
+#include <naval/primitives/popup.hpp>
 #include <naval/primitives/tag.hpp>
 #include <naval/sink.hpp>
 
@@ -139,6 +140,9 @@ NAVAL_SERIALIZE(Figure, metadata, vertices);
 // image.hpp
 template <>
 void Serialize(ISink& sink, const Image& image);
+
+// popup.hpp
+NAVAL_SERIALIZE(Popup, metadata, text);
 
 // log_packet.hpp
 void Serialize(ISink& sink, const LogPacket& image);

@@ -46,6 +46,7 @@
 #include <naval/primitives/figure.hpp>
 #include <naval/primitives/image.hpp>
 #include <naval/primitives/message_metadata.hpp>
+#include <naval/primitives/popup.hpp>
 #include <naval/primitives/tag.hpp>
 
 namespace cv {
@@ -58,22 +59,22 @@ struct DrawProperties;
 
 /**
  * @class LogPacket
- * 
+ *
  * @brief Log contents for a single video frame.
- * 
+ *
  */
 class LogPacket {
  public:
   /**
    * @brief LogPacket timestamp type.
-   * 
+   *
    */
   using Timestamp = double;
 
  public:
   /**
    * @brief Construct a new Log Packet object
-   * 
+   *
    * @param timestamp_sec Timestamp of the LogPacket.
    */
   explicit LogPacket(Timestamp timestamp_sec) : timestamp_sec_{timestamp_sec} {
@@ -81,23 +82,30 @@ class LogPacket {
 
   /**
    * @brief Returns the contained Figure objects.
-   * 
+   *
    * @see Figure
    */
   std::vector<Figure> GetFigures() const;
 
   /**
    * @brief Returns the contained Image objects.
-   * 
+   *
    * @see Image
    */
   std::vector<Image> GetImages() const;
 
   /**
+   * @brief Returns the contained Popup objects.
+   *
+   * @see Popup
+   */
+  std::vector<Popup> GetPopups() const;
+
+  /**
    * @brief Log value with Info level.
-   * 
+   *
    * A handy wrapper over Log() method.
-   * 
+   *
    * @see Log
    */
   template <typename Value>
@@ -107,9 +115,9 @@ class LogPacket {
 
   /**
    * @brief Log value with Info level.
-   * 
+   *
    * A handy wrapper over Log() method.
-   * 
+   *
    * @see Log
    */
   template <typename Value>
@@ -119,13 +127,13 @@ class LogPacket {
 
   /**
    * @brief Logs @p value.
-   * 
+   *
    * @tparam Value Value type.
    * @param log_level Log level.
    * @param value Value.
    * @param tags Vector of Tag.
    * @param properties DrawProperties.
-   * 
+   *
    * @see LogLevel, Value, DrawProperties
    */
   template <typename Value>
@@ -138,6 +146,8 @@ class LogPacket {
     std::lock_guard lock{mutex_};
     if constexpr (std::is_same_v<cv::Mat, Value>) {
       images_.emplace_back(metadata, std::move(value));
+    } else if constexpr (std::is_same_v<std::string, Value> || std::is_same_v<const char*, Value>) {
+      popups_.emplace_back(metadata, std::move(value));
     } else {
       figures_.emplace_back(metadata, ConvertToVertices(value));
     }
@@ -145,18 +155,18 @@ class LogPacket {
 
   /**
    * @brief Add a new Figure to the LogPacket.
-   * 
+   *
    * @param figure Figure.
-   * 
+   *
    * @see Figure.
    */
   void AddFigure(Figure figure);
 
   /**
    * @brief Add a new Image to the LogPacket.
-   * 
+   *
    * @param figure Image.
-   * 
+   *
    * @see Image.
    */
   void AddImage(Image image);
@@ -173,6 +183,7 @@ class LogPacket {
   Timestamp timestamp_sec_;
   std::vector<Figure> figures_;
   std::vector<Image> images_;
+  std::vector<Popup> popups_;
 };
 
 }  // namespace naval
